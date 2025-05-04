@@ -12,15 +12,19 @@ public class Employee {
     @Column(name = "employee_name")
     private String employeeName;
 
+    @Column(name = "gender")
+    private String gender;
+
     @Column(name= "working")
     private boolean employeeWorking;
 
     public Employee() {
     }
 
-    public Employee(Long employeeId, String employeeName, boolean employeeWorking) {
+    public Employee(Long employeeId, String employeeName,String gender, boolean employeeWorking) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
+        this.gender = gender;
         this.employeeWorking = employeeWorking;
     }
 
@@ -38,6 +42,14 @@ public class Employee {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public boolean isEmployeeWorking() {
