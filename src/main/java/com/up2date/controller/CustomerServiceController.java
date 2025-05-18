@@ -9,6 +9,7 @@ import com.up2date.repository.CustomerRepository;
 import com.up2date.repository.CustomerServiceRepository;
 import com.up2date.repository.EmployeeRepository;
 import com.up2date.repository.ServiceRepository;
+import com.up2date.service.CustomerService_ServiceLayer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -21,40 +22,12 @@ import java.util.Map;
 @RestController
 public class CustomerServiceController {
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private ServiceRepository serviceRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private CustomerServiceRepository customerServiceRepository;
+    private CustomerService_ServiceLayer customerService_serviceLayer;
 
     @PostMapping("/customer-service")
     public ResponseEntity<?> createCustomerService(@RequestBody CustomerServiceDTO customerServiceDTO){
         try{
-            CustomerService customerService = new CustomerService();
-
-            Customer customer = customerRepository.findById(customerServiceDTO.getCustomerId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-            Service service = serviceRepository.findById(customerServiceDTO.getServiceId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-            Employee employee = null;
-            if (customerServiceDTO.getEmployeeId() != null) {
-                employee = employeeRepository.findById(customerServiceDTO.getEmployeeId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-            }
-
-            customerService.setCustomer(customer);
-            customerService.setService(service);
-            customerService.setCSEmployeeId(employee);
-            customerService.setServiceTakenDate(customerServiceDTO.getServiceTakenDate());
-            customerService.setPaymentMethod(customerServiceDTO.getPaymentMethod());
-            customerService.setAmount(customerServiceDTO.getAmount());
-
-            CustomerService savedCustomerService = customerServiceRepository.save(customerService);
+             CustomerService savedCustomerService = customerService_serviceLayer.createCustomerService(customerServiceDTO);
             return ResponseEntity.ok().body(Map.of(
                     "id", savedCustomerService.getId(),
                     "message", "Service added successfully"
