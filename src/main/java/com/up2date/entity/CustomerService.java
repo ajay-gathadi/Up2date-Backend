@@ -27,7 +27,7 @@ public class CustomerService {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee employeeId;
+    private Employee employee;
 
     @Column(name = "payment_method")
     private String paymentMethod;
@@ -77,11 +77,11 @@ public class CustomerService {
     }
 
     public Employee getCSEmployeeId() {
-        return employeeId;
+        return employee;
     }
 
     public void setCSEmployeeId(Employee servicedBy) {
-        this.employeeId = employeeId;
+        this.employee = servicedBy;
     }
 
     public String getPaymentMethod() {
