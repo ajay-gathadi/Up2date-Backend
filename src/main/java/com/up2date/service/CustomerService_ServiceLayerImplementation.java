@@ -49,6 +49,6 @@ class CustomerService_ServiceLayerImplementation implements CustomerService_Serv
         customerService.setPaymentMethod(customerServiceDTO.getPaymentMethod());
         customerService.setAmount(customerServiceDTO.getAmount());
 
-        return customerServiceRepository.save(customerService);;
+        return customerServiceRepository.save(customerService);
     }
 }
