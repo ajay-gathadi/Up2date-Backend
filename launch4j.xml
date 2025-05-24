@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch4jConfig>
+    <dontWrapJar>false</dontWrapJar>
+    <headerType>console</headerType>
+    <jar>/Users/ajaydeepakgathadi/Desktop/deploy/Up2date-Backend-1.0-SNAPSHOT.jar</jar>
+    <outfile>/Users/ajaydeepakgathadi/Desktop/deploy/Up2date.exe</outfile>
+    <errTitle>Up2date</errTitle>
+    <chdir>.</chdir>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <jre>
+        <path>jre</path>
+        <minVersion>21</minVersion>
+        <bundledJre64Bit>true</bundledJre64Bit>
+    </jre>
+</launch4jConfig>
