@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.graalvm.buildtools.native' version '0.9.28'
+    id 'edu.sc.seis.launch4j' version '3.0.5'
 }
 
 graalvmNative {
@@ -16,6 +17,18 @@ graalvmNative {
             buildArgs.add('--initialize-at-build-time=org.slf4j.LoggerFactory')
         }
     }
+}
+
+launch4j{
+    mainClassName = 'com.up2date.Up2dteApplication'
+    outputDir = 'build/launch4j'
+    outfile = 'Up2date.exe'
+    jarTask = tasks.bootJar
+    windowTitle = 'Up2date'
+    jreMinVersion = '21'
+    dontWrapJar = false
+    headerType = 'console'
+    jvmOptions = ['-Dspring.profiles.active=prod']
 }
 
 group = 'com.up2date'
