@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
@@ -33,7 +33,7 @@ public class CustomerController {
     @Autowired
     private CustomerServiceRepository customerServiceRepository;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         try{
             Set<CustomerService> customerServices = new HashSet<>();
