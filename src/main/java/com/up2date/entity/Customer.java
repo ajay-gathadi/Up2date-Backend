@@ -15,13 +15,13 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", nullable = true)
     private String customerName;
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number", nullable = true)
     private String mobileNumber;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = true)
     private String gender;
 
     @JsonManagedReference("customer-services")
