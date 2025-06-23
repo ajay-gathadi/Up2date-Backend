@@ -16,16 +16,15 @@ public class DashboardService {
         this.customerServiceRepository = customerServiceRepository;
     }
 
-    public double calculateTotalBusinessForDate(){
-        LocalDate today = LocalDate.now();
-        Double total = customerServiceRepository.getTotalBusinessForDate();
+    public double calculateTotalBusinessForDate(LocalDate localDate){
+        Double total = customerServiceRepository.getTotalBusinessForDate(localDate);
         return total != null ? total : 0.0;
     }
 
-    public DashboardSummaryDTO getDashboardSummaryForDate(){
-        Double totalBusiness = customerServiceRepository.getTotalBusinessForDate();
-        Double cashCollected = customerServiceRepository.getTotalCashCollectedForDate();
-        Double onlineCollected = customerServiceRepository.getTotalOnlineCollectedForDate();
+    public DashboardSummaryDTO getDashboardSummaryForDate(LocalDate localDate){
+        Double totalBusiness = customerServiceRepository.getTotalBusinessForDate(localDate);
+        Double cashCollected = customerServiceRepository.getTotalCashCollectedForDate(localDate);
+        Double onlineCollected = customerServiceRepository.getTotalOnlineCollectedForDate(localDate);
 
         return new DashboardSummaryDTO(
                 totalBusiness != null ? totalBusiness : 0.0,
@@ -34,13 +33,13 @@ public class DashboardService {
         );
     }
 
-    public double getTotalCashForDate(){
-        Double totalCash = customerServiceRepository.getTotalCashCollectedForDate();
+    public double getTotalCashForDate(LocalDate localDate){
+        Double totalCash = customerServiceRepository.getTotalCashCollectedForDate(localDate);
         return totalCash != null ? totalCash : 0.0;
     }
 
-    public double getTotalOnlineForDate(){
-        Double totalOnline = customerServiceRepository.getTotalOnlineCollectedForDate();
+    public double getTotalOnlineForDate(LocalDate localDate){
+        Double totalOnline = customerServiceRepository.getTotalOnlineCollectedForDate(localDate);
         return totalOnline != null ? totalOnline : 0.0;
     }
 }
