@@ -38,7 +38,7 @@ public class Customer {
     }
 
     public List<Service> getServices(){
-        return servicesTaken.stream().map(CustomerService::getService).toList();
+        return servicesTaken.stream().flatMap(customerService -> customerService.getServices().stream()).toList();
     }
 
     public List<Employee> getEmployeesWhoServed(){
