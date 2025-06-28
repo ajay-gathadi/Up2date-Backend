@@ -3,6 +3,7 @@ package com.up2date.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class CustomerService {
     private List<Service> services = new ArrayList<>();
 
     @Column(name = "service_taken_date")
-    private LocalDateTime serviceTakenDate;
+    private Instant serviceTakenDate;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -55,7 +56,7 @@ public class CustomerService {
     public CustomerService() {
     }
 
-    public CustomerService(Customer customer, List<Service> services, LocalDateTime serviceTakenDate) {
+    public CustomerService(Customer customer, List<Service> services, Instant serviceTakenDate) {
         this.customer = customer;
         this.services = services;
         this.serviceTakenDate = serviceTakenDate;
@@ -85,11 +86,11 @@ public class CustomerService {
         this.services = services;
     }
 
-    public LocalDateTime getServiceTakenDate() {
+    public Instant getServiceTakenDate() {
         return serviceTakenDate;
     }
 
-    public void setServiceTakenDate(LocalDateTime serviceTakenDate) {
+    public void setServiceTakenDate(Instant serviceTakenDate) {
         this.serviceTakenDate = serviceTakenDate;
     }
 

@@ -1,5 +1,6 @@
 package com.up2date.dto;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class CustomerServiceDTO {
     private double amount;
     private double cashAmount;
     private double onlineAmount;
-    private LocalDateTime serviceTakenDate;
+    private Instant serviceTakenDate;
 
     public Long getCustomerId() {
         return customerId;
@@ -53,11 +54,11 @@ public class CustomerServiceDTO {
         this.amount = amount;
     }
 
-    public LocalDateTime getServiceTakenDate() {
+    public Instant getServiceTakenDate() {
         return serviceTakenDate;
     }
 
-    public void setServiceTakenDate(LocalDateTime serviceTakenDate) {
+    public void setServiceTakenDate(Instant serviceTakenDate) {
         this.serviceTakenDate = serviceTakenDate;
     }
 
