@@ -1,10 +1,11 @@
 package com.up2date.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CustomerServiceDTO {
     private Long customerId;
-    private Long serviceId;
+    private List<Long> serviceIds;
     private Long employeeId;
     private String paymentMethod;
     private double amount;
@@ -20,12 +21,12 @@ public class CustomerServiceDTO {
         this.customerId = customerId;
     }
 
-    public Long getServiceId() {
-        return serviceId;
+    public List<Long> getServiceIds() {
+        return serviceIds;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setServiceIds(List<Long> serviceIds) {
+        this.serviceIds = serviceIds;
     }
 
     public Long getEmployeeId() {
