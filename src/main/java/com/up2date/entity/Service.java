@@ -1,5 +1,6 @@
 package com.up2date.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -22,8 +23,11 @@ public class Service{
     @Column(name = "for_female")
     private boolean forFemale;
 
-    @JsonManagedReference("service-customers")
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+//
+    @JsonIgnore
+    @ManyToMany(mappedBy = "services"
+//            cascade = CascadeType.ALL
+    )
     private Set<CustomerService> customerServices = new HashSet<>();
 
     public Service() {
@@ -82,10 +86,5 @@ public class Service{
 
     public void setCustomerServices(Set<CustomerService> customerServices) {
         this.customerServices = customerServices;
-    }
-
-    public void addCustomerService(CustomerService customerService) {
-        this.customerServices.add(customerService);
-        customerService.setService(this);
     }
 }
