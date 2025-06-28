@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customer_service")
@@ -17,10 +19,19 @@ public class CustomerService {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @JsonBackReference("service-customers")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "service_id", nullable = false)
-    private Service service;
+//    @JsonBackReference("service-customers")
+//    @ManyToMany()
+//    @JoinColumn(name = "service_id", nullable = false)
+//    private Service service;
+
+//    @JsonBackReference("service-customers")
+    @ManyToMany()
+    @JoinTable(
+            name = "customer_service_junction",
+            joinColumns = @JoinColumn(name = "customer_service_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private List<Service> services = new ArrayList<>();
 
     @Column(name = "service_taken_date")
     private LocalDateTime serviceTakenDate;
@@ -44,9 +55,9 @@ public class CustomerService {
     public CustomerService() {
     }
 
-    public CustomerService(Customer customer, Service service, LocalDateTime serviceTakenDate) {
+    public CustomerService(Customer customer, List<Service> services, LocalDateTime serviceTakenDate) {
         this.customer = customer;
-        this.service = service;
+        this.services = services;
         this.serviceTakenDate = serviceTakenDate;
     }
 
@@ -66,12 +77,12 @@ public class CustomerService {
         this.customer = customer;
     }
 
-    public Service getService() {
-        return service;
+    public List<Service> getServices() {
+        return services;
     }
 
-    public void setService(Service service) {
-        this.service = service;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     public LocalDateTime getServiceTakenDate() {
