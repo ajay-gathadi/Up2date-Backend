@@ -16,24 +16,31 @@ import java.util.List;
 
 @Service
 class CustomerService_ServiceLayerImplementation implements CustomerService_ServiceLayer {
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
+    private final ServiceRepository serviceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final CustomerServiceRepository customerServiceRepository;
 
-    @Autowired
-    private ServiceRepository serviceRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private CustomerServiceRepository customerServiceRepository;
+    public CustomerService_ServiceLayerImplementation(CustomerRepository customerRepository, ServiceRepository serviceRepository,
+                                                      EmployeeRepository employeeRepository, CustomerServiceRepository customerServiceRepository) {
+        this.customerRepository = customerRepository;
+        this.serviceRepository = serviceRepository;
+        this.employeeRepository = employeeRepository;
+        this.customerServiceRepository = customerServiceRepository;
+    }
 
     @Override
     public CustomerService createCustomerService(CustomerServiceDTO customerServiceDTO){
         CustomerService customerService = new CustomerService();
 
-        Customer customer = customerRepository.findById(customerServiceDTO.getCustomerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        Customer customer;
+        if(customerServiceDTO.getCustomerId() != null){
+            customer = customerRepository.findById(customerServiceDTO.getCustomerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        } else {
+            customer = new Customer();
+            customerRepository.save(customer);
+        }
 
         List<com.up2date.entity.Service> services = serviceRepository.findAllById(customerServiceDTO.getServiceIds());
         if(services.size() != customerServiceDTO.getServiceIds().size()){
@@ -55,6 +62,12 @@ class CustomerService_ServiceLayerImplementation implements CustomerService_Serv
         customerService.setCashAmount(customerServiceDTO.getCashAmount());
         customerService.setOnlineAmount(customerServiceDTO.getOnlineAmount());
 
+        if(employee != null && customerService.getAmount() != null){
+            double commission = customerService.getAmount() * 0.10;
+            customerService.setCommission(commission);
+        }else{
+            customerService.setCommission(0.0);
+        }
         return customerServiceRepository.save(customerService);
     }
 }

@@ -53,6 +53,9 @@ public class CustomerService {
     @Column(name = "online_amount")
     private Double onlineAmount = 0.0;
 
+    @Column(name = "commission")
+    private Double commission;
+
     public CustomerService() {
     }
 
@@ -132,6 +135,14 @@ public class CustomerService {
 
     public void setOnlineAmount(Double onlineAmount) {
         this.onlineAmount = onlineAmount;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
     }
 
     public boolean isValidSplitPayment(){

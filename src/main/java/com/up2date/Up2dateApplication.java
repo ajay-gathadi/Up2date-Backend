@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class Up2dateApplication {
@@ -21,5 +22,7 @@ public class Up2dateApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(Up2dateApplication.class, args);
+//        SpringApplicationBuilder builder = new SpringApplicationBuilder(Up2dateApplication.class);
+//        builder.headless(false).run(args);
     }
 }

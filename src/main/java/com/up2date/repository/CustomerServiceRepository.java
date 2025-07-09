@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface CustomerServiceRepository extends JpaRepository<CustomerService, Long> {
     @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM customer_service  " +
@@ -19,4 +20,6 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     @Query(value = "SELECT COALESCE(SUM(online_amount),0) FROM customer_service "+
     "WHERE DATE(service_taken_date) = :date", nativeQuery = true)
     Double getTotalOnlineCollectedForDate(@Param("date") LocalDate date);
+
+    List<CustomerService> findByCommissionIsNull();
 }
