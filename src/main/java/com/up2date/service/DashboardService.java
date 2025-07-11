@@ -25,11 +25,15 @@ public class DashboardService {
         Double totalBusiness = customerServiceRepository.getTotalBusinessForDate(localDate);
         Double cashCollected = customerServiceRepository.getTotalCashCollectedForDate(localDate);
         Double onlineCollected = customerServiceRepository.getTotalOnlineCollectedForDate(localDate);
+        Double totalCommission = customerServiceRepository.getTotalCommissionForDate(localDate);
+
+        double totalProfit=  (totalBusiness != null ? totalBusiness : 0.0) - (totalCommission != null ? totalCommission : 0.0);
 
         return new DashboardSummaryDTO(
                 totalBusiness != null ? totalBusiness : 0.0,
                 cashCollected != null ? cashCollected : 0.0,
-                onlineCollected != null ? onlineCollected : 0.0
+                onlineCollected != null ? onlineCollected : 0.0,
+                totalProfit
         );
     }
 
