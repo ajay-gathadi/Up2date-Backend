@@ -1,5 +1,6 @@
 package com.up2date.controller;
 
+import com.up2date.dto.DashboardSummaryDTO;
 import com.up2date.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,5 +51,13 @@ public class DashboardController {
         double onlineCollected = dashboardService.getTotalOnlineForDate(queryDate);
 
         return ResponseEntity.ok(onlineCollected);
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<DashboardSummaryDTO> getDashboardSummary(@RequestParam(value = "date", required = false)
+                                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> localDate){
+        LocalDate queryDate = localDate.orElse(LocalDate.now());
+        DashboardSummaryDTO summary = dashboardService.getDashboardSummaryForDate(queryDate);
+        return ResponseEntity.ok(summary);
     }
 }
