@@ -22,4 +22,8 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     Double getTotalOnlineCollectedForDate(@Param("date") LocalDate date);
 
     List<CustomerService> findByCommissionIsNull();
+
+    @Query(value = "SELECT COALESCE(SUM(commission),0) FROM customer_service "+
+    "WHERE DATE(service_taken_date) = :date", nativeQuery = true)
+    Double getTotalCommissionForDate(@Param("date") LocalDate date);
 }
