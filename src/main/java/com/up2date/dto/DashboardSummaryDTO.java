@@ -4,14 +4,16 @@ public class DashboardSummaryDTO {
     private double totalBusiness;
     private double cashCollected;
     private double onlineCollected;
+    private double totalProfit;
 
     public DashboardSummaryDTO() {
     }
 
-    public DashboardSummaryDTO(double totalBusiness, double cashCollected, double onlineCollected) {
+    public DashboardSummaryDTO(double totalBusiness, double cashCollected, double onlineCollected, double totalProfit) {
         this.totalBusiness = totalBusiness;
         this.cashCollected = cashCollected;
         this.onlineCollected = onlineCollected;
+        this.totalProfit = totalProfit;
     }
 
     public double getTotalBusiness() {
@@ -36,5 +38,13 @@ public class DashboardSummaryDTO {
 
     public void setOnlineCollected(double onlineCollected) {
         this.onlineCollected = onlineCollected;
+    }
+
+    public double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(double totalProfit) {
+        this.totalProfit = totalProfit;
     }
 }
