@@ -1,11 +1,14 @@
 package com.up2date.service;
 
 import com.up2date.dto.DashboardSummaryDTO;
+import com.up2date.dto.EmployeeCommissionDTO;
 import com.up2date.repository.CustomerServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DashboardService {
@@ -14,6 +17,15 @@ public class DashboardService {
     @Autowired
     public DashboardService(CustomerServiceRepository customerServiceRepository){
         this.customerServiceRepository = customerServiceRepository;
+    }
+
+    public List<EmployeeCommissionDTO> getEmployeeCommissionByDateRange(LocalDate startDate, LocalDate endDate){
+        List<Object[]> rawResults = customerServiceRepository.findEmployeeCommissionsByDateRange(startDate, endDate);
+
+        return rawResults.stream().map(currentResult -> new EmployeeCommissionDTO(
+                (String) currentResult[0],
+                ((Number) currentResult[1]).doubleValue()
+        )).collect(Collectors.toList());
     }
 
     public double calculateTotalBusinessForDate(LocalDate localDate){
