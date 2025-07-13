@@ -1,6 +1,7 @@
 package com.up2date.controller;
 
 import com.up2date.dto.DashboardSummaryDTO;
+import com.up2date.dto.EmployeeCommissionDTO;
 import com.up2date.service.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,6 +23,27 @@ public class DashboardController {
     @Autowired
     public DashboardController(DashboardService dashboardService){
         this.dashboardService = dashboardService;
+    }
+
+    @GetMapping("/employee-commissions")
+    public ResponseEntity<List<EmployeeCommissionDTO>> getEmployeeCommissions(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        try{
+            List<EmployeeCommissionDTO> commissionDTOS = dashboardService.getEmployeeCommissionByDateRange(startDate,endDate);
+            return ResponseEntity.ok(commissionDTOS);
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<DashboardSummaryDTO> getDashboardSummary(@RequestParam(value = "date", required = false)
+                                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> localDate){
+        LocalDate queryDate = localDate.orElse(LocalDate.now());
+        DashboardSummaryDTO summary = dashboardService.getDashboardSummaryForDate(queryDate);
+        return ResponseEntity.ok(summary);
     }
 
     @GetMapping("/total-business-forDate")
@@ -51,13 +74,5 @@ public class DashboardController {
         double onlineCollected = dashboardService.getTotalOnlineForDate(queryDate);
 
         return ResponseEntity.ok(onlineCollected);
-    }
-
-    @GetMapping("/summary")
-    public ResponseEntity<DashboardSummaryDTO> getDashboardSummary(@RequestParam(value = "date", required = false)
-                                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> localDate){
-        LocalDate queryDate = localDate.orElse(LocalDate.now());
-        DashboardSummaryDTO summary = dashboardService.getDashboardSummaryForDate(queryDate);
-        return ResponseEntity.ok(summary);
     }
 }
