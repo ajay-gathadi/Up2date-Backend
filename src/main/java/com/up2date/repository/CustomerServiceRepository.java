@@ -26,4 +26,13 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     @Query(value = "SELECT COALESCE(SUM(commission),0) FROM customer_service "+
     "WHERE DATE(service_taken_date) = :date", nativeQuery = true)
     Double getTotalCommissionForDate(@Param("date") LocalDate date);
+
+    @Query(value = "SELECT e.employee_name as employeeName, " +
+                   "SUM(cs.commission) as totalCommission " +
+                   "FROM customer_service cs " +
+                   "JOIN employee e ON cs.employee_id = e.employee_id " +
+                   "WHERE DATE(cs.service_taken_date) BETWEEN :startDate AND :endDate "+
+                   "GROUP BY e.employee_name "+
+                   "ORDER BY totalCommission DESC", nativeQuery = true)
+    List<Object[]> findEmployeeCommissionsByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
