@@ -1,5 +1,7 @@
 package com.up2date.controller;
 
+import com.up2date.dto.CustomerSummaryDTO;
+import com.up2date.dto.CustomerVisitLogDTO;
 import com.up2date.dto.DashboardSummaryDTO;
 import com.up2date.dto.EmployeeCommissionDTO;
 import com.up2date.service.DashboardService;
@@ -23,6 +25,34 @@ public class DashboardController {
     @Autowired
     public DashboardController(DashboardService dashboardService){
         this.dashboardService = dashboardService;
+    }
+
+    @GetMapping("/customer-summary")
+    public ResponseEntity<List<CustomerSummaryDTO>> getCustomerSummary(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        try{
+            List<CustomerSummaryDTO> customerSummaries = dashboardService.getCustomerSummaryByDateRange(startDate, endDate);
+            return ResponseEntity.ok(customerSummaries);
+        } catch (Exception e){
+            System.err.println("Error fetching customer summary: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/customer-visit-log")
+    public ResponseEntity<List<CustomerVisitLogDTO>> getCustomerVisitLog(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        try{
+            List<CustomerVisitLogDTO> visitLogs = dashboardService.getCustomerVisitLogByDateRange(startDate, endDate);
+            return ResponseEntity.ok(visitLogs);
+        } catch (Exception e){
+            System.err.println("Error fetching customer visit log: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/employee-commissions")
