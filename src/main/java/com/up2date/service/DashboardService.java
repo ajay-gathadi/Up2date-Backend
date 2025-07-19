@@ -1,5 +1,7 @@
 package com.up2date.service;
 
+import com.up2date.dto.CustomerSummaryDTO;
+import com.up2date.dto.CustomerVisitLogDTO;
 import com.up2date.dto.DashboardSummaryDTO;
 import com.up2date.dto.EmployeeCommissionDTO;
 import com.up2date.repository.CustomerServiceRepository;
@@ -26,6 +28,14 @@ public class DashboardService {
                 (String) currentResult[0],
                 ((Number) currentResult[1]).doubleValue()
         )).collect(Collectors.toList());
+    }
+
+    public List<CustomerSummaryDTO> getCustomerSummaryByDateRange(LocalDate startDate, LocalDate endDate) {
+        return customerServiceRepository.findCustomerSummaryByDateRange(startDate, endDate);
+    }
+
+    public List<CustomerVisitLogDTO> getCustomerVisitLogByDateRange(LocalDate startDate, LocalDate endDate){
+        return customerServiceRepository.findCustomerVisitLogsByDateRange(startDate, endDate);
     }
 
     public double calculateTotalBusinessForDate(LocalDate localDate){
