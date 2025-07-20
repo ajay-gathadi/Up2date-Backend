@@ -38,7 +38,7 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
                     "LEFT JOIN " +
                         "customer_service cs ON e.employee_id = cs.employee_id " +
                     "AND " +
-                        "DATE(cs.service_taken_date) >= :startDate AND DATE(cs.service_taken_date) <= :endDate " +
+                        "CAST(cs.service_taken_date AS DATE) BETWEEN :startDate AND :endDate " +
                     "GROUP BY " +
                         "e.employee_id, e.employee_name "+
                     "ORDER BY " +
@@ -48,8 +48,8 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     @Query(value = "SELECT " +
                         "c.customer_name AS customerName, " +
                         "c.mobile_number AS mobileNumber, " +
-                        "COUNT(cs.id) AS totalVisits, " +
-                        "COALESCE(SUM(cs.amount), 0) AS totalAmount, " +
+                        "(COUNT(cs.id) AS totalVisits, " +
+                        "COALESCE(SUM(cs.amount) AS totalAmount, " +
                         "STRING_AGG(DISTINCT s.service_name, ', ') AS services, " +
                         "MAX(cs.service_taken_date) AS lastVisitDate " +
                     "FROM " +
@@ -67,7 +67,7 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
                     "ORDER BY " +
                         "totalAmount DESC", nativeQuery = true
     )
-    List<CustomerSummaryDTO> findCustomerSummaryByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Object[]> findCustomerSummaryByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Query(value = "SELECT " +
                         "c.customer_name AS customerName, " +
