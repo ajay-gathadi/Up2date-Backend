@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,15 @@ public class DashboardService {
     }
 
     public List<CustomerSummaryDTO> getCustomerSummaryByDateRange(LocalDate startDate, LocalDate endDate) {
-        return customerServiceRepository.findCustomerSummaryByDateRange(startDate, endDate);
+        List<Object[]> rawResults = customerServiceRepository.findCustomerSummaryByDateRange(startDate, endDate);
+        return rawResults.stream().map(currentResult -> new CustomerSummaryDTO(
+                (String) currentResult[0],
+                (String) currentResult[1],
+                ((Number) currentResult[2]).longValue(),
+                ((Number) currentResult[3]).doubleValue(),
+                (String) currentResult[4],
+                (convertToLocalDate(currentResult[5]))
+        )).collect(Collectors.toList());
     }
 
     public List<CustomerVisitLogDTO> getCustomerVisitLogByDateRange(LocalDate startDate, LocalDate endDate){
@@ -67,5 +76,28 @@ public class DashboardService {
     public double getTotalOnlineForDate(LocalDate localDate){
         Double totalOnline = customerServiceRepository.getTotalOnlineCollectedForDate(localDate);
         return totalOnline != null ? totalOnline : 0.0;
+    }
+
+    private LocalDate convertToLocalDate(Object date){
+        if (date == null) {
+            return null;
+        }
+        if(date instanceof LocalDate localDate) {
+            return localDate;
+        } else if (date instanceof java.sql.Date) {
+            return ((java.sql.Date) date).toLocalDate();
+        } else if( date instanceof java.sql.Timestamp){
+            return ((java.sql.Timestamp) date).toLocalDateTime().toLocalDate();
+        }
+
+        String dateString = date.toString();
+        if (dateString.contains("T")){
+            if(dateString.endsWith("Z")){
+                dateString = dateString.substring(0, dateString.length() - 1);
+            }
+            return LocalDateTime.parse(dateString).toLocalDate();
+        } else{
+            return LocalDate.parse(dateString);
+        }
     }
 }
