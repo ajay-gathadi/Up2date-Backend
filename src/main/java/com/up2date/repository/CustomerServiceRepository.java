@@ -48,8 +48,8 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     @Query(value = "SELECT " +
                         "c.customer_name AS customerName, " +
                         "c.mobile_number AS mobileNumber, " +
-                        "(COUNT(cs.id) AS totalVisits, " +
-                        "COALESCE(SUM(cs.amount) AS totalAmount, " +
+                        "COUNT(DISTINCT CAST(cs.service_taken_date as DATE)) AS totalVisits, " +
+                        "COALESCE(SUM(cs.amount),0) AS totalAmount, " +
                         "STRING_AGG(DISTINCT s.service_name, ', ') AS services, " +
                         "MAX(cs.service_taken_date) AS lastVisitDate " +
                     "FROM " +
