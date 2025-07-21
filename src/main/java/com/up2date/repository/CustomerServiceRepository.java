@@ -1,7 +1,5 @@
 package com.up2date.repository;
 
-import com.up2date.dto.CustomerSummaryDTO;
-import com.up2date.dto.CustomerVisitLogDTO;
 import com.up2date.entity.CustomerService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -45,21 +43,29 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
                         "e.employee_name", nativeQuery = true)
     List<Object[]> findEmployeeCommissionsByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    @Query(value = "SELECT " +
+    @Query(value =  "WITH ServiceAgg AS (" +
+                        "SELECT " +
+                            "csj.customer_service_id, " +
+                            "STRING_AGG(s.service_name, ', ') AS aggregated_services " +
+                        "FROM " +
+                            "customer_service_junction csj " +
+                        "JOIN " +
+                            "services s ON csj.service_id = s.service_id " +
+                        "GROUP BY csj.customer_service_id " +
+                    ") "+
+                    "SELECT " +
                         "c.customer_name AS customerName, " +
                         "c.mobile_number AS mobileNumber, " +
                         "COUNT(DISTINCT CAST(cs.service_taken_date as DATE)) AS totalVisits, " +
                         "COALESCE(SUM(cs.amount),0) AS totalAmount, " +
-                        "STRING_AGG(DISTINCT s.service_name, ', ') AS services, " +
+                        "STRING_AGG(DISTINCT sa.aggregated_services, ', ') AS services, " +
                         "MAX(cs.service_taken_date) AS lastVisitDate " +
                     "FROM " +
                         "customer c " +
                     "JOIN " +
                         "customer_service cs ON c.customer_id = cs.customer_id " +
-                    "JOIN " +
-                        "customer_service_junction csj ON cs.id = csj.customer_service_id " +
-                    "JOIN " +
-                        "services s ON csj.service_id = s.service_id " +
+                    "LEFT JOIN " +
+                        "ServiceAgg sa ON cs.id = sa.customer_service_id "+
                     "WHERE " +
                         "CAST(cs.service_taken_date AS DATE) BETWEEN :startDate AND :endDate " +
                     "GROUP BY " +
@@ -69,27 +75,33 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     )
     List<Object[]> findCustomerSummaryByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    /**
+     * Retrieves customer details for a specific date.
+     *
+     * @param date the date for which to retrieve customer details
+     * @return a list of Object arrays containing customer information
+     */
     @Query(value = "SELECT " +
                         "c.customer_name AS customerName, " +
                         "c.mobile_number AS mobileNumber, " +
-                        "cs.service_taken_date AS serviceTakenDate, " +
-                        "cs.amount AS amount, " +
-                        "cs.payment_method AS paymentMethod, " +
-                        "STRING_AGG(s.service_name, ', ') AS services " +
-                   "FROM " +
+                        "COALESCE(SUM(cs.amount), 0) AS totalAmount, " +
+                        "STRING_AGG(DISTINCT s.service_name, ', ') AS services, " +
+                        "e.employee_name AS employeeName " +
+                    "FROM " +
                         "customer_service cs " +
-                   "JOIN " +
+                    "JOIN " +
                         "customer c ON cs.customer_id = c.customer_id " +
-                   "JOIN " +
+                    "JOIN " +
+                        "employee e ON cs.employee_id = e.employee_id " +
+                    "JOIN " +
                         "customer_service_junction csj ON cs.id = csj.customer_service_id " +
-                   "JOIN " +
+                    "JOIN " +
                         "services s ON csj.service_id = s.service_id " +
-                   "WHERE " +
-                        "CAST(cs.service_taken_date AS DATE) BETWEEN :startDate AND :endDate "+
-                   "GROUP BY " +
-                        "cs.id ,c.customer_name, c.mobile_number, cs.service_taken_date, cs.amount, cs.payment_method "+
-                   "ORDER BY "+
-                        "cs.service_taken_date DESC", nativeQuery = true
-    )
-    List<CustomerVisitLogDTO> findCustomerVisitLogsByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+                    "WHERE " +
+                        "CAST(cs.service_taken_date AS DATE) = :date " +
+                    "GROUP BY " +
+                        "c.customer_id, c.customer_name, c.mobile_number, cs.id, cs.amount, e.employee_name " +
+                    "ORDER BY " +
+                        "cs.service_taken_date DESC", nativeQuery = true)
+    List<Object[]> findCustomerDetailsForADate(@Param("date") LocalDate date);
 }
