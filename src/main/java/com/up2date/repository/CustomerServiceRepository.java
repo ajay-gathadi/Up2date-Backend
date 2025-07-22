@@ -84,8 +84,8 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
     @Query(value = "SELECT " +
                         "c.customer_name AS customerName, " +
                         "c.mobile_number AS mobileNumber, " +
-                        "COALESCE(SUM(cs.amount), 0) AS totalAmount, " +
-                        "STRING_AGG(DISTINCT s.service_name, ', ') AS services, " +
+                        "cs.amount AS totalAmount, " +
+                        "STRING_AGG(s.service_name, ', ') AS services, " +
                         "e.employee_name AS employeeName " +
                     "FROM " +
                         "customer_service cs " +
@@ -93,14 +93,14 @@ public interface CustomerServiceRepository extends JpaRepository<CustomerService
                         "customer c ON cs.customer_id = c.customer_id " +
                     "JOIN " +
                         "employee e ON cs.employee_id = e.employee_id " +
-                    "JOIN " +
+                    "LEFT JOIN " +
                         "customer_service_junction csj ON cs.id = csj.customer_service_id " +
-                    "JOIN " +
+                    "LEFT JOIN " +
                         "services s ON csj.service_id = s.service_id " +
                     "WHERE " +
                         "CAST(cs.service_taken_date AS DATE) = :date " +
                     "GROUP BY " +
-                        "c.customer_id, c.customer_name, c.mobile_number, cs.id, cs.amount, e.employee_name " +
+                        "cs.id, c.customer_name, c.mobile_number,  cs.amount, e.employee_name " +
                     "ORDER BY " +
                         "cs.service_taken_date DESC", nativeQuery = true)
     List<Object[]> findCustomerDetailsForADate(@Param("date") LocalDate date);
