@@ -41,7 +41,7 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/customerDetailsForADate")
+    @GetMapping("/customer-details-for-date")
     public ResponseEntity<List<CustomerDetailsDTO>> getCustomerDetailsForADate(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate
     ){
