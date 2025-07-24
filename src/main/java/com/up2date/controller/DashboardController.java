@@ -41,6 +41,14 @@ public class DashboardController {
         }
     }
 
+    @GetMapping("/employee-commissions-for-date")
+    public ResponseEntity<List<EmployeeCommissionDTO>> getEmployeeCommissionsForADate(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ){
+        List<EmployeeCommissionDTO> employeeCommissions = dashboardService.getEmployeeCommissionForADate(date);
+        return ResponseEntity.ok(employeeCommissions);
+    }
+
     @GetMapping("/customer-details-for-date")
     public ResponseEntity<List<CustomerDetailsDTO>> getCustomerDetailsForADate(
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate
