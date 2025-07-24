@@ -31,6 +31,15 @@ public class DashboardService {
         )).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves employee commission for a single, specific date.
+     * @param date
+     * @return A list of EmployeeCommissionDTO containing employee names and their total commissions for the specified date.
+     */
+    public List<EmployeeCommissionDTO> getEmployeeCommissionForADate(LocalDate date){
+        return getEmployeeCommissionByDateRange(date, date);
+    }
+
     public List<CustomerSummaryDTO> getCustomerSummaryByDateRange(LocalDate startDate, LocalDate endDate) {
         List<Object[]> rawResults = customerServiceRepository.findCustomerSummaryByDateRange(startDate, endDate);
         return rawResults.stream().map(currentResult -> new CustomerSummaryDTO(
